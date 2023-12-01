@@ -6,7 +6,14 @@ export default {
     "./node_modules/flowbite/**/*.js",
   ],
   theme: {
-    extend: {},
+    fontFamily: {
+      sans: ["Bai Jamjuree", "Padauk", "sans-serif"],
+    },
+    extend: {
+      fontFamily: {
+        heading: ["Montserrat"],
+      },
+    },
   },
   plugins: [require("flowbite/plugin")],
 };
