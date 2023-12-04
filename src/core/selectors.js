@@ -23,3 +23,7 @@ export const productCartItemGroup = app.querySelector("#productCartItemGroup");
 export const productCartItemTemplate = app.querySelector(
   "#productCartItemTemplate"
 );
+export const totalCost = app.querySelector("#totalCost");
+
+// order
+export const orderBtn = app.querySelector("#orderBtn");

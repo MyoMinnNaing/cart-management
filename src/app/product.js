@@ -1,10 +1,13 @@
-import { loadConfigFromFile } from "vite";
+import { products } from "../core/data";
 import {
   outlineStarTemplate,
+  productCartItemGroup,
   productGroup,
   productTemplate,
   solidStarTemplate,
+  totalCost,
 } from "../core/selectors";
+import { productCartItemUi } from "./cart";
 
 export const ratingStar = (rate) => {
   const starsFragment = document.createDocumentFragment();
@@ -42,6 +45,11 @@ const productUi = ({
   product.querySelector(".product-count").innerText = count;
 
   product.querySelector(".product-stars").append(ratingStar(rate));
+
+  // if the product is already exists in cart , add to cart button => must be disabled
+  if (productCartItemGroup.querySelector(`[product-cart-item-id = '${id}']`)) {
+    product.querySelector(".add-to-cart-btn").toggleAttribute("disabled");
+  }
   return product;
 };
 
@@ -52,8 +60,18 @@ export const productRender = (products) => {
 
 export const productGroupHandler = (event) => {
   if (event.target.classList.contains("add-to-cart-btn")) {
-    const currentProduct = event.target.closet(".product-card");
-    // const currentProductId = currentProduct.getAttribute("product-card-id");
-    // console.log(currentProductId);
+    event.target.toggleAttribute("disabled");
+    const currentProductCard = event.target.closest(".product-card");
+    const currentProductCardId =
+      currentProductCard.getAttribute("product-card-id");
+
+    const currentProduct = products.find(
+      (product) => product.id == currentProductCardId
+    );
+
+    productCartItemGroup.append(productCartItemUi(currentProduct));
   }
+
+  // count product item in cart
+  //  count with cartObserver in cart.js
 };

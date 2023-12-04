@@ -77,7 +77,7 @@
       <!-- drawer component -->
       <div
         id="drawer-right-example"
-        class="fixed top-0 right-0 z-40 h-screen p-4 overflow-y-auto transition-transform translate-x-full bg-white w-80 lg:w-96"
+        class="fixed top-0 right-0 z-40 h-screen p-4 transition-transform translate-x-full bg-white w-80 lg:w-96"
         tabindex="-1"
         aria-labelledby="drawer-right-label"
       >
@@ -125,75 +125,13 @@
             </div>
           </section>
 
-          <section class="flex-grow border-b border-b-slate-600">
+          <section
+            id="productCartItemGroup"
+            class="flex-grow border-b border-b-slate-600 flex flex-col gap-4 overflow-y-scroll"
+          >
             <!-- Empty state -->
             <div class="hidden h-2/3 last:flex justify-center items-end">
               <img src="./images/empty-cart.png" alt="" />
-            </div>
-
-            <div id="productCartItemGroup" class="flex flex-col gap-2">
-              <!-- <div class="product-cart-item">
-                <img
-                  class="product-cart-img h-16 -mb-8 ml-5"
-                  src="https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg"
-                  alt=""
-                />
-                <div
-                  class="product-detail border border-slate-600 p-4 rounded-lg"
-                >
-                  <div class="mb-3 mt-7">
-                    <h1
-                      class="product-cart-title line-clamp-1 font-heading font-bold text-base text-slate-600 mb-1"
-                    >
-                      Fjallraven - Foldsack No. 1 Backpack, Fits 15 Laptops
-                    </h1>
-                  </div>
-                  <div class="flex justify-between items-center">
-                    <p class="text-slate-600 font-heading font-semibold">
-                      $ <span class="product-cart-price">123</span>
-                    </p>
-                    <div class="flex">
-                      <button class="bg-slate-200 p-1 rounded">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke-width="1.5"
-                          stroke="currentColor"
-                          class="w-4 h-4"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            d="M18 12H6"
-                          />
-                        </svg>
-                      </button>
-                      <p
-                        class="product-cart-quantity w-10 pr-4 bg-slate-100 text-end"
-                      >
-                        1
-                      </p>
-                      <button class="bg-slate-200 p-1 rounded">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke-width="1.5"
-                          stroke="currentColor"
-                          class="w-4 h-4"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            d="M12 6v12m6-6H6"
-                          />
-                        </svg>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div> -->
             </div>
           </section>
           <footer class="pb-5">
@@ -201,9 +139,12 @@
               <h1 class="font-heading font-bold text-lg text-slate-600">
                 Total Amount
               </h1>
-              <p class="text-slate-500 text-lg font-bold">$ <span>0</span></p>
+              <p class="text-slate-500 text-lg font-bold">
+                $ <span id="totalCost">0</span>
+              </p>
             </div>
             <button
+              id="orderBtn"
               type="button"
               class="block w-full bg-slate-700 text-white border border-slate-800 hover:bg-slate-600 focus:ring-4 focus:outline-none focus:ring-slate-300 font-bold py-2 text-center"
             >
@@ -279,7 +220,7 @@
         <button
           id=""
           type="button"
-          class="categoryBtn category-name text-gray-900 hover:text-white border border-gray-800 hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded text-sm px-5 py-1 text-center"
+          class="categoryBtn category-name text-gray-900 hover:text-white border border-gray-800 hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded text-sm px-5 py-1 text-center whitespace-nowrap"
         >
           All
         </button>
@@ -324,9 +265,14 @@
             </p>
             <button
               type="button"
-              class="add-to-cart-btn block w-full text-slate-700 hover:text-white border border-slate-800 hover:bg-slate-900 focus:ring-4 focus:outline-none focus:ring-slate-300 font-bold rounded-lg text-sm py-2 text-center"
+              class="group add-to-cart-btn block w-full disabled:bg-slate-900 disabled:text-white text-slate-700 hover:text-white border border-slate-800 hover:bg-slate-900 focus:ring-4 focus:outline-none focus:ring-slate-300 font-bold rounded-lg text-sm py-2 text-center"
             >
-              Add to cart
+              <span class="inline group-disabled:hidden pointer-events-none"
+                >Add to cart</span
+              >
+              <span class="hidden group-disabled:inline pointer-events-none"
+                >Added</span
+              >
             </button>
           </div>
         </div>
@@ -371,11 +317,32 @@
       <template id="productCartItemTemplate">
         <div class="product-cart-item">
           <img
-            class="product-cart-img h-16 -mb-8 ml-5"
+            class="product-cart-img h-16 -mb-8 ml-5 relative z-50"
             src="https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg"
             alt=""
           />
-          <div class="product-detail border border-slate-600 p-4 rounded-lg">
+          <div
+            class="relative group product-detail border border-slate-600 p-4 rounded-lg"
+          >
+            <!-- delete button -->
+            <button
+              class="cart-del-btn absolute right-4 translate-x-10 opacity-0 pointer-events-none group-hover:opacity-100 group-hover:translate-x-0 group-hover:pointer-events-auto duration-200 bg-slate-200 p-1 rounded-lg hover:bg-slate-100 text-red-600 active:scale-90"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-4 h-4 pointer-events-none"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                />
+              </svg>
+            </button>
             <div class="mb-3 mt-7">
               <h1
                 class="product-cart-title line-clamp-1 font-heading font-bold text-base text-slate-600 mb-1"
@@ -386,17 +353,20 @@
             <div class="flex justify-between items-center">
               <p class="text-slate-600 font-heading font-semibold">
                 $ <span class="product-cart-cost">3000</span>
-                <span class="product-cart-price">300</span>
+                <span class="product-cart-price hidden">300</span>
               </p>
               <div class="flex">
-                <button class="bg-slate-200 p-1 rounded">
+                <!-- sub quantity button -->
+                <button
+                  class="sub-quantity-btn bg-slate-200 p-1 rounded active:scale-90 hover:bg-slate-300"
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke-width="1.5"
                     stroke="currentColor"
-                    class="w-4 h-4"
+                    class="w-4 h-4 pointer-events-none"
                   >
                     <path
                       stroke-linecap="round"
@@ -410,14 +380,17 @@
                 >
                   1
                 </p>
-                <button class="bg-slate-200 p-1 rounded">
+                <!-- add quantity button -->
+                <button
+                  class="add-quantity-btn bg-slate-200 p-1 rounded active:scale-90 hover:bg-slate-300"
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke-width="1.5"
                     stroke="currentColor"
-                    class="w-4 h-4"
+                    class="w-4 h-4 pointer-events-none"
                   >
                     <path
                       stroke-linecap="round"
